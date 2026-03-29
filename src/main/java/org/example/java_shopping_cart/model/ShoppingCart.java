@@ -1,12 +1,10 @@
 package org.example.java_shopping_cart.model;
 
-import org.example.java_shopping_cart.services.LocalizationService;
-
 import java.text.NumberFormat;
 import java.util.Locale;
 
 public class ShoppingCart {
-    double cartTotalPrice = 0.0;
+    double cartTotalPrice = 0.00;
 
     public double calculateItemCost(int quantity,double price){
         return quantity*price;
