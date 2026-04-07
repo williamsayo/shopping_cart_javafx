@@ -4,10 +4,12 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
+import org.example.java_shopping_cart.db.DataBaseConnection;
+import org.example.java_shopping_cart.db.ShoppingCartDAO;
+
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 public class LocalizationService {
     private static Locale currentLocale = Locale.US;
@@ -16,36 +18,17 @@ public class LocalizationService {
             new SimpleLongProperty(0);
 
     public static Map<String, String> getLocalizedStrings(Locale locale) {
-        try {
-            ResourceBundle bundle = ResourceBundle.getBundle(
-                    "i18n.MessageBundles",
-                    locale
-            );
-
-            // Extract all keys
-            for (String key : bundle.keySet()) {
-                strings.put(key, bundle.getString(key));
-            }
-        } catch (Exception e) {
-            System.err.println("Failed to load resource bundle for locale: " + locale);
-            // Fallback to English
-            try {
-                ResourceBundle fallback = ResourceBundle.getBundle(
-                        "i18n.MessagesBundle",
-                        Locale.US
-                );
-                for (String key : fallback.keySet()) {
-                    strings.put(key, fallback.getString(key));
-                }
-            } catch (Exception ex) {
-                // Use hardcoded defaults as last resort
-                strings.put("welcomeMessage", "Enter number of items:");
-                strings.put("itemPrice", "Enter price for item:");
-                strings.put("itemQuantity", "Enter quantity for item:");
-                strings.put("total", "Total cost:");
-            }
+        try{
+            ShoppingCartDAO shoppingCartDAO = new ShoppingCartDAO(DataBaseConnection.getConnection());
+            strings = shoppingCartDAO.getAllLocaleStrings(locale.getLanguage());
+        }catch(Exception e){
+            strings.put("welcomeMessage", "Enter number of items:");
+            strings.put("itemPrice", "Enter price for item:");
+            strings.put("itemQuantity", "Enter quantity for item:");
+            strings.put("total", "Total cost:");
+            strings.put("calculateButton", "Calculate Total");
+            strings.put("enterItemsButton", "Enter items");
         }
-
         return strings;
     }
 

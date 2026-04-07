@@ -5,6 +5,7 @@ module org.example.java_shopping_cart {
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
     requires org.kordamp.bootstrapfx.core;
+    requires java.sql;
 
     opens org.example.java_shopping_cart to javafx.fxml;
     exports org.example.java_shopping_cart;
