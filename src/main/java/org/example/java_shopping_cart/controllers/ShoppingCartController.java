@@ -10,9 +10,13 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import org.example.java_shopping_cart.db.DataBaseConnection;
+import org.example.java_shopping_cart.model.CartItem;
 import org.example.java_shopping_cart.model.ShoppingCart;
+import org.example.java_shopping_cart.services.CartService;
 import org.example.java_shopping_cart.services.LocalizationService;
 
+import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.util.*;
 
@@ -29,15 +33,21 @@ public class ShoppingCartController {
     @FXML private TextField cartSize;
     @FXML private Label totalCostLabel;
 
-    private Map<String, String> localizedStrings;
+    private CartService cartService;
 
     private final List<TextField> priceFields = new ArrayList<>();
     private final List<TextField> qtyFields   = new ArrayList<>();
-    private ShoppingCart shoppingCart = new ShoppingCart();
+    private final ShoppingCart shoppingCart = new ShoppingCart();
 
     @FXML
     public void initialize(){
         setLanguage(LocalizationService.getLocale());
+
+        try{
+            cartService = new CartService(DataBaseConnection.getConnection());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -58,9 +68,7 @@ public class ShoppingCartController {
         }
 
         // Clear previous state
-        itemsVBox.getChildren().clear();
-        priceFields.clear();
-        qtyFields.clear();
+        clearState();
         totalCost.setText("");
 
         for (int index = 1; index <= count; index++) {
@@ -98,25 +106,23 @@ public class ShoppingCartController {
 
     @FXML
     private void calculateTotal() {
-        priceFields.forEach(f -> f.setStyle(""));
-        qtyFields.forEach(f   -> f.setStyle(""));
-
         for (int index = 0; index < priceFields.size(); index++) {
-            TextField pricefield = priceFields.get(index);
-            TextField qtyfield = qtyFields.get(index);
+            TextField priceField = priceFields.get(index);
+            TextField qtyField = qtyFields.get(index);
             try {
-                double price = Double.parseDouble(pricefield.getText().trim());
-                int qty   = Integer.parseInt(qtyfield.getText().trim());
+                double price = Double.parseDouble(priceField.getText().trim());
+                int qty = Integer.parseInt(qtyField.getText().trim());
                 if (price < 0 || qty < 1) throw new NumberFormatException();
-                double itemCost = shoppingCart.calculateItemCost(qty,price);
-                shoppingCart.addToCart(itemCost);
+                CartItem item = new CartItem(qty, price,index + 1);
+                shoppingCart.addToCart(item);
             } catch (NumberFormatException e) {
-                pricefield.setStyle("-fx-border-color: red;");
-                qtyfield.setStyle("-fx-border-color: red;");
+                priceField.setStyle("-fx-border-color: red;");
+                qtyField.setStyle("-fx-border-color: red;");
                 shoppingCart.clearCart();
                 return;
             }
         }
+        cartService.saveCart(shoppingCart,LocalizationService.getLocale().getLanguage());
         totalCost.setText(shoppingCart.formatTotalPrice(LocalizationService.getLocale()));
         shoppingCart.clearCart();
     }
@@ -135,7 +141,7 @@ public class ShoppingCartController {
         LocalizationService.changeLocale(locale);
 
         // Load localized strings
-        localizedStrings = LocalizationService.getLocalizedStrings(locale);
+        Map<String, String> localizedStrings = LocalizationService.getLocalizedStrings(locale);
 
         // Update all UI text
         welcomeMessage.setText(localizedStrings.get("welcomeMessage"));
@@ -166,6 +172,14 @@ public class ShoppingCartController {
                     : "-fx-text-alignment: left; -fx-alignment: center-left;";
             cartSize.setStyle(alignment);
         });
+    }
+
+    private void clearState(){
+        // Clear previous state
+        itemsVBox.getChildren().clear();
+        priceFields.clear();
+        qtyFields.clear();
+        shoppingCart.clearCart();
     }
 
 }
