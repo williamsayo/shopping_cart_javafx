@@ -16,17 +16,26 @@ class ShoppingCartTest {
 
     @Test
     void testAddToCart() {
-        shoppingCart.addToCart(60);
-        shoppingCart.addToCart(20);
+        shoppingCart.addToCart(new CartItem(3,20,1));
+        shoppingCart.addToCart(new CartItem(1,20,2));
         assertEquals(80.0,shoppingCart.getCartTotalPrice());
-        shoppingCart.addToCart(200);
+        shoppingCart.addToCart(new CartItem(2,100,3));
         assertEquals(280.0,shoppingCart.getCartTotalPrice());
     }
 
     @Test
+    void testRemoveFromCart() {
+        shoppingCart.addToCart(new CartItem(3,20,1));
+        shoppingCart.addToCart(new CartItem(1,20,2));
+        assertEquals(80.0,shoppingCart.getCartTotalPrice());
+        shoppingCart.removeFromCart(2);
+        assertEquals(60.0,shoppingCart.getCartTotalPrice());
+    }
+
+    @Test
     void formatTotalPrice() {
-        shoppingCart.addToCart(60);
-        shoppingCart.addToCart(20.99);
+        shoppingCart.addToCart(new CartItem(1,60,1));
+        shoppingCart.addToCart(new CartItem(1,20.99,2));
         assertEquals("$80.99",shoppingCart.formatTotalPrice(Locale.US));
         assertEquals("￥81",shoppingCart.formatTotalPrice(new Locale("ja","JP")));
         assertEquals("80,99 €",shoppingCart.formatTotalPrice(new Locale("fi","FI")));
@@ -34,8 +43,8 @@ class ShoppingCartTest {
 
     @Test
     void clearCart() {
-        shoppingCart.addToCart(60);
-        shoppingCart.addToCart(20);
+        shoppingCart.addToCart(new CartItem(1,60,1));
+        shoppingCart.addToCart(new CartItem(1,20.99,2));
         shoppingCart.clearCart();
         assertEquals(0.0,shoppingCart.getCartTotalPrice());
     }
