@@ -17,6 +17,8 @@ public class LocalizationService {
     private static final LongProperty localeChangeUpdate =
             new SimpleLongProperty(0);
 
+    private LocalizationService () {}
+
     public static Map<String, String> getLocalizedStrings(Locale locale) {
         try{
             ShoppingCartDAO shoppingCartDAO = new ShoppingCartDAO(DataBaseConnection.getConnection());

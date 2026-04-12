@@ -6,10 +6,12 @@ import java.sql.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ShoppingCartDAO {
     private final Connection con;
-
+    private static final Logger logger = Logger.getLogger(ShoppingCartDAO.class.getName());
     public ShoppingCartDAO(Connection con) {
         this.con = con;
     }
@@ -25,12 +27,12 @@ public class ShoppingCartDAO {
                 strings.put(resultSet.getString("key"), resultSet.getString("value"));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, e.getMessage());
         }
 
         // Fallback
         if (strings.isEmpty() && !"en".equalsIgnoreCase(language)) {
-            System.err.println("No strings for '" + language + "'");
+            logger.log(Level.SEVERE,"No strings for {0}", language);
             return getAllLocaleStrings("en");
         }
 
@@ -59,7 +61,7 @@ public class ShoppingCartDAO {
             }
 
         } catch (Exception e) {
-            System.err.println("saveCartItems failed: " + e.getMessage());
+            logger.log(Level.SEVERE,"saveCartItems failed: {0}", e.getMessage());
         }
         return insertCount;
     }
@@ -78,7 +80,7 @@ public class ShoppingCartDAO {
                 return keys.getInt(1);
             }
         } catch (SQLException e) {
-            System.err.println("saveCartRecord failed: " + e.getMessage());
+            logger.log(Level.SEVERE,"saveCartItems failed: {0}", e.getMessage());
         }
         return -1;
     }

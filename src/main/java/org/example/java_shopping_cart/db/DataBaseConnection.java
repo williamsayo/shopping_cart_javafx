@@ -5,10 +5,12 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DataBaseConnection {
-        private static final String DB_URL = "jdbc:mariadb://localhost:3306/shopping_cart_localization";
-        private static final String DB_USER  = "root";
-        private static final String DB_PASS = "root";
+        private static final String DB_URL = System.getenv("DB_URL");
+        private static final String DB_USER  = System.getenv("DB_USER");
+        private static final String DB_PASS = System.getenv("DB_PASS");
         private static Connection connection;
+
+        private DataBaseConnection() {}
 
         public static Connection getConnection() throws SQLException {
             if (connection == null || connection.isClosed()) {

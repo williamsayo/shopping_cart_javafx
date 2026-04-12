@@ -1,7 +1,6 @@
 package org.example.java_shopping_cart.controllers;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.NodeOrientation;
@@ -16,8 +15,8 @@ import org.example.java_shopping_cart.model.ShoppingCart;
 import org.example.java_shopping_cart.services.CartService;
 import org.example.java_shopping_cart.services.LocalizationService;
 
+import java.io.IOException;
 import java.sql.SQLException;
-import java.text.NumberFormat;
 import java.util.*;
 
 public class ShoppingCartController {
@@ -40,13 +39,13 @@ public class ShoppingCartController {
     private final ShoppingCart shoppingCart = new ShoppingCart();
 
     @FXML
-    public void initialize(){
+    public void initialize() throws IOException {
         setLanguage(LocalizationService.getLocale());
 
         try{
             cartService = new CartService(DataBaseConnection.getConnection());
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new IOException(e);
         }
     }
 
@@ -127,13 +126,14 @@ public class ShoppingCartController {
         shoppingCart.clearCart();
     }
 
-    public void changeLanguage(ActionEvent actionEvent) {
+    public void changeLanguage() {
         switch (languageComboBox.getValue()){
             case "English" -> setLanguage(Locale.US);
-            case "suomalainen" -> setLanguage(new Locale("fi", "FI"));
-            case "Svenska" ->setLanguage(new Locale("sv", "SE"));
-            case "日本語" ->  setLanguage(new Locale("ja", "JP"));
-            case "العربية" -> setLanguage(new Locale("ar", "AE"));
+            case "suomalainen" -> setLanguage(Locale.forLanguageTag("fi-FI"));
+            case "Svenska" ->setLanguage(Locale.forLanguageTag("sv-SE"));
+            case "日本語" ->  setLanguage(Locale.forLanguageTag("ja-JP"));
+            case "العربية" -> setLanguage(Locale.forLanguageTag("ar-AE"));
+            default -> setLanguage(Locale.getDefault());
         }
     }
 
