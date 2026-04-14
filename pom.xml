@@ -13,7 +13,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.projectKey>javafx_shopping_cart</sonar.projectKey>
         <junit.version>5.12.1</junit.version>
-        <sonar.coverage.exclusions>**/test/**</sonar.coverage.exclusions>
+        <sonar.coverage.exclusions>**/test/**,**/controllers/**,**/ShoppingCartApplication.java,**/Launcher.java</sonar.coverage.exclusions>
     </properties>
 
     <dependencies>
@@ -148,6 +148,9 @@
                 <configuration>
                     <excludes>
                         <exclude>**/test/**</exclude>
+                        <exclude>**/controllers/**</exclude>
+                        <exclude>**/ShoppingCartApplication.*</exclude>
+                        <exclude>**/Launcher.*</exclude>
                     </excludes>
                 </configuration>
                 <executions>

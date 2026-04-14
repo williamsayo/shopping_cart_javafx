@@ -10,9 +10,9 @@ public class CartService {
     private final ShoppingCartDAO dao;
     private final Connection con;
 
-    public CartService(Connection connection) {
+    public CartService(Connection connection, ShoppingCartDAO dao) {
         this.con = connection;
-        this.dao = new ShoppingCartDAO(connection);
+        this.dao = dao;
     }
 
     public void saveCart(ShoppingCart cart,String language) {

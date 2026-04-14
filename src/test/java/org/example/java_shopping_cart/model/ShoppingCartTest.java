@@ -10,6 +10,31 @@ class ShoppingCartTest {
     ShoppingCart shoppingCart = new ShoppingCart();
 
     @Test
+    void testGetItemsReturnsAddedItems() {
+        CartItem first = new CartItem(2, 15, 1);
+        CartItem second = new CartItem(1, 12.5, 2);
+
+        shoppingCart.addToCart(first);
+        shoppingCart.addToCart(second);
+
+        assertEquals(2, shoppingCart.getItems().size());
+        assertTrue(shoppingCart.getItems().contains(first));
+        assertTrue(shoppingCart.getItems().contains(second));
+    }
+
+    @Test
+    void testGetTotalItems() {
+        assertEquals(0, shoppingCart.getTotalItems());
+
+        shoppingCart.addToCart(new CartItem(3, 20, 1));
+        shoppingCart.addToCart(new CartItem(1, 20, 2));
+        assertEquals(2, shoppingCart.getTotalItems());
+
+        shoppingCart.removeFromCart(2);
+        assertEquals(1, shoppingCart.getTotalItems());
+    }
+
+    @Test
     void testCalculateItemCost() {
         assertEquals(60.0,shoppingCart.calculateItemCost(3,20));
     }

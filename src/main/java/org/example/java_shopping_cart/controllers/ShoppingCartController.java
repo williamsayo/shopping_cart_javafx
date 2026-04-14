@@ -10,12 +10,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.example.java_shopping_cart.db.DataBaseConnection;
+import org.example.java_shopping_cart.db.ShoppingCartDAO;
 import org.example.java_shopping_cart.model.CartItem;
 import org.example.java_shopping_cart.model.ShoppingCart;
 import org.example.java_shopping_cart.services.CartService;
 import org.example.java_shopping_cart.services.LocalizationService;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -43,7 +45,8 @@ public class ShoppingCartController {
         setLanguage(LocalizationService.getLocale());
 
         try{
-            cartService = new CartService(DataBaseConnection.getConnection());
+            Connection dbConnection = DataBaseConnection.getConnection();
+            cartService = new CartService(dbConnection, new ShoppingCartDAO(dbConnection));
         } catch (SQLException e) {
             throw new IOException(e);
         }
