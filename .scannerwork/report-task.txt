@@ -1,0 +1,6 @@
+projectKey=javafx_shopping_cart
+serverUrl=http://localhost:9000
+serverVersion=26.3.0.120487
+dashboardUrl=http://localhost:9000/dashboard?id=javafx_shopping_cart
+ceTaskId=35ba34a8-f825-410d-98c7-9356a9197744
+ceTaskUrl=http://localhost:9000/api/ce/task?id=35ba34a8-f825-410d-98c7-9356a9197744
