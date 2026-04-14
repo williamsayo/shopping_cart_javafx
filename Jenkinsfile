@@ -6,6 +6,8 @@ pipeline {
 
     environment {
         GITHUB_REPOSITORY= "${params.GITHUB_REPOSITORY}"
+        SONARQUBE_SERVER = 'SonarQubeServer'
+        SONAR_CREDENTIALS = "${params.SONAR_CRED}"
         DOCKERHUB_CREDENTIALS="${params.DOCKER_CRED}"
         DOCKERHUB_REPOSITORY="williamsayo/gui_localization"
         DOCKER_IMAGE_TAG="v1"
@@ -53,6 +55,14 @@ pipeline {
         stage("publish coverage report"){
             steps {
                 jacoco()
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQubeServer') {
+                    bat "sonar-scanner"
+                }
             }
         }
 
