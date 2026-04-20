@@ -2,6 +2,9 @@ FROM maven:3.9.6-eclipse-temurin-21 AS build
 
 LABEL authors="willi"
 ENV DISPLAY=host.docker.internal:0.0
+ENV DB_USER=root
+ENV DB_PASS=root
+ENV DB_URL=jdbc:mariadb://localhost:3306/shopping_cart_localization
 
 # Install only required libraries (NO MAVEN HERE)
 RUN apt-get update && \
