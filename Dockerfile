@@ -5,7 +5,7 @@ ENV DISPLAY=host.docker.internal:0.0
 
 # Install only required libraries (NO MAVEN HERE)
 RUN apt-get update && \
-    apt-get install -y wget unzip libgtk-3-0 libgbm1 libx11-6 && \
+    apt-get install -y wget unzip libgtk-3-0 libgbm1 libx11-6 fonts-noto-cjk fonts-noto-cjk-extra && \
     apt-get clean
 
 # Download JavaFX SDK
